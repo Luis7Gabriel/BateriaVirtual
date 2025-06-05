@@ -1,14 +1,23 @@
+var isSound = false;
+
+
 document.body.addEventListener('keyup', (event)=>{
 playSound(event.code.toLowerCase());
 });
 
 
-document.querySelector('.composer button').addEventListener('click', ()=>{
-    let song = document.querySelector('#input').value;
+document.querySelector('.composer button').addEventListener('click', async ()=>{
+    let song = document.querySelector('#input').value.toLowerCase();
 
-    if(song !=='') {
-        let songArray = song.split('');
-        playComposition(songArray);
+    if(song !=='' || isSound) {
+        let songArray = song.split(''); 
+        
+        if (isSound) { 
+            return
+        }
+
+        await playComposition(songArray);
+        console.log("skip1")
     }
 
 });
@@ -33,16 +42,20 @@ setTimeout(()=>{
 }
 
 
-function playComposition(songArray) {
+async function playComposition(songArray) { 
     let wait = 0;
-
-
+    
+    isSound = true
+    
     for(let songItem of songArray) {
-        setTimeout( ()=>{
-            playSound(`key${songItem}`);
+        playSound(`key${songItem}`);
 
-        },wait);
-
-        wait+= 250;
+        await awaitSound(250); 
     }
+
+    isSound = false;
+}
+
+const awaitSound = (ms) => { 
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
