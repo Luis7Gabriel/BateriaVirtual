@@ -44,6 +44,5 @@ function playComposition(songArray) {
         },wait);
 
         wait+= 250;
-        playSound(`key${songItem}`);
     }
 }
